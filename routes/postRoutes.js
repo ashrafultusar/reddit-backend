@@ -6,3 +6,4 @@ router.post('/', createPost);
 router.get('/', getPosts);
 
 module.exports = router;
+
