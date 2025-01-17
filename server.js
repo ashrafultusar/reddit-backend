@@ -32,57 +32,6 @@ async function run() {
     const db = client.db("phreddit");
     const users = db.collection("users");
 
-    // app.post("/signIn", async (req, res) => {
-    //   const { name, email, password } = req.body;
-
-    //   try {
-    //     const existingUser = await users.findOne({ email });
-    //     if (existingUser) {
-    //       return res.status(400).send({ error: "Email already in use" });
-    //     }
-
-    //     const salt = bcrypt.genSaltSync(10);
-    //     const hashedPass = bcrypt.hashSync(password, salt);
-
-    //     const user = {
-    //       name,
-    //       password: hashedPass,
-    //       email,
-    //     };
-
-    //     const result = await users.insertOne(user);
-    //     res.status(201).send(result);
-    //   } catch (error) {
-    //     console.error(error);
-    //     res.status(500).send({ error: "Internal Server Error" });
-    //   }
-    // });
-
-    // // Login
-    // app.post("/login", async (req, res) => {
-    //   try {
-    //     const user = await users.findOne({ name: req.body.name });
-    //     if (!user) {
-    //       return res.status(400).send("User not found");
-    //     }
-
-    //     const passwordCheck = await bcrypt.compare(
-    //       req.body.password,
-    //       user.password
-    //     );
-    //     if (passwordCheck) {
-    //       return res
-    //         .status(200)
-    //         .json({ message: "Login successful", name: user.name });
-    //     } else {
-    //       return res.status(400).send("Wrong details");
-    //     }
-    //   } catch (err) {
-    //     console.error(err);
-    //     return res.status(500).send("An error occurred on the server");
-    //   }
-    // });
-
 
     app.post("/signIn", async (req, res) => {
       const { name, email, password } = req.body;
