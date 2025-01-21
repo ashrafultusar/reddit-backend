@@ -1,0 +1,19 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "server.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "server.js"
+      }
+    ],
+    "env": {
+      "MONGO_URI": "mongodb+srv://phreddit:SoUHgFB2dk7nk57b@cluster0.z8fz6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/phreddit"
+    }
+  }
+  
