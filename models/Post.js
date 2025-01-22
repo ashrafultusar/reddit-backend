@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const postSchema = new mongoose.Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
+  vote: { type: Number, default: 0 },
+  views: { type: Number, default: 0 },
   existingLinkFlair: { type: String },
   addLinkFlair: { type: String },
   communityName: { type: String, required: true },
