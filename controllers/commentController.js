@@ -46,6 +46,9 @@ const getCommentsByPost = async (req, res) => {
       createdAt: -1,
     });
 
+    // Calculate total comments count for the post
+    const totalCommentCount = await Comment.countDocuments({ postId });
+
     // Function to fetch replies recursively
     const populateReplies = async (comment) => {
       const replies = await Comment.find({ parentComment: comment._id }).sort({
@@ -67,11 +70,15 @@ const getCommentsByPost = async (req, res) => {
       }))
     );
 
-    res.status(200).json(commentsWithReplies);
+    res.status(200).json({
+      totalCommentCount,
+      comments: commentsWithReplies,
+    });
   } catch (error) {
     console.error("Error fetching comments:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+  
 
 module.exports = { addCommentOrReply, getCommentsByPost };
