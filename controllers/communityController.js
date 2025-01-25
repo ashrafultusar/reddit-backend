@@ -1,5 +1,6 @@
 const Community = require("../models/Community");
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
 
 exports.createCommunity = async (req, res) => {
   const { communityName, creator, description } = req.body;
@@ -38,6 +39,14 @@ exports.getCommunityDetails = async (req, res) => {
     // Fetch posts under the community
     const posts = await Post.find({ communityName });
 
+    // Fetch comments for each post
+    const postsWithComments = await Promise.all(
+      posts.map(async (post) => {
+        const comments = await Comment.find({ postId: post._id });
+        return { ...post.toObject(), comments }; // Include comments with each post
+      })
+    );
+
     // Extract unique authors (user count)
     const uniqueAuthors = new Set(posts.map((post) => post.author));
 
@@ -48,7 +57,7 @@ exports.getCommunityDetails = async (req, res) => {
       creator: community.creator,
       createdAt: community.createdAt,
       postCount: posts.length,
-      posts,
+      posts: postsWithComments,
       userCount: uniqueAuthors.size,
     };
 
