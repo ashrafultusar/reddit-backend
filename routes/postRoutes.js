@@ -5,8 +5,12 @@ const {
   getPostDetails,
   updatePostViews,
   updatePostVotes,
+  searchPosts,
 } = require("../controllers/postController");
+
 const router = express.Router();
+
+router.get("/search", searchPosts);
 
 router.post("/", createPost);
 router.get("/", getPosts);
