@@ -2,20 +2,46 @@ const Community = require("../models/Community");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 
+// exports.createCommunity = async (req, res) => {
+//   const { communityName, creator, description } = req.body;
+
+//   try {
+//     const community = await Community.create({
+//       communityName,
+//       creator,
+//       description,
+//     });
+//     res.status(201).json(community);
+//   } catch (err) {
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 exports.createCommunity = async (req, res) => {
   const { communityName, creator, description } = req.body;
 
   try {
+    // Check if a community with the same name already exists
+    const existingCommunity = await Community.findOne({ communityName });
+
+    if (existingCommunity) {
+      return res.status(400).json({ message: "A community with this name already exists" });
+    }
+
+    // Create the community if the name is unique
     const community = await Community.create({
       communityName,
       creator,
       description,
     });
+
     res.status(201).json(community);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 exports.getCommunities = async (req, res) => {
   try {

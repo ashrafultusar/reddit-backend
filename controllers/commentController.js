@@ -29,7 +29,7 @@ const addCommentOrReply = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+ 
 // Get comments with nested replies for a specific post
 const getCommentsByPost = async (req, res) => {
   const { postId } = req.params;
