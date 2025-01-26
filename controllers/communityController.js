@@ -80,4 +80,59 @@ exports.getCommunityDetails = async (req, res) => {
   }
 };
 
+// Get a Specific Community by ID
+exports.getCommunityById = async (req, res) => {
+  const { communityId } = req.params;
 
+  try {
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    res.status(200).json(community);
+  } catch (err) {
+    console.error("Error fetching community by ID:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+exports.updateCommunity = async (req, res) => {
+  const { communityId } = req.params;
+  const { communityName, description } = req.body;
+
+  try {
+    const community = await Community.findByIdAndUpdate(
+      communityId,
+      { communityName, description },
+      { new: true }
+    );
+
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    res.status(200).json(community);
+  } catch (err) {
+    console.error("Error updating community:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.deleteCommunity = async (req, res) => {
+  const { communityId } = req.params;
+
+  try {
+    const community = await Community.findByIdAndDelete(communityId);
+
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    res.status(200).json({ message: "Community deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting community:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
