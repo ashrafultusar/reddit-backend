@@ -12,5 +12,5 @@ const postSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   email: {type: String}
 });
-
+ 
 module.exports = mongoose.model("Post", postSchema);

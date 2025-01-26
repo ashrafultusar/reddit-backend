@@ -12,7 +12,7 @@ exports.createPost = async (req, res) => {
     addLinkFlair,
     author,
     content,
-    email,
+    email, 
   } = req.body;
 
   try {
@@ -180,5 +180,51 @@ exports.searchPosts = async (req, res) => {
     res
       .status(500)
       .json({ message: "An error occurred.", error: error.message });
+  }
+};
+
+
+// Get Post Details by ID
+exports.getPostDetails = async (req, res) => {
+  try {
+    const { id } = req.params; // Get post ID from params
+    if (!id) {
+      return res.status(400).json({ message: "Post ID is required." });
+    }
+
+    const postDetails = await Post.findById(id);
+    if (!postDetails) {
+      return res.status(404).json({ message: "Post not found." });
+    }
+
+    res.status(200).json(postDetails);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error.", error: error.message });
+  }
+};
+
+// Update Post
+exports.updatePost = async (req, res) => {
+  try {
+    const { id } = req.params; // Get post ID from params
+    const updatedData = req.body; // Get updated data from request body
+
+    if (!id) {
+      return res.status(400).json({ message: "Post ID is required." });
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: "Post not found." });
+    }
+
+    res.status(200).json({ message: "Post updated successfully!", updatedPost });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error.", error: error.message });
   }
 };

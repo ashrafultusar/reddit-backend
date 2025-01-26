@@ -18,3 +18,4 @@ router.put("/id/:communityId", updateCommunity);
 router.delete("/id/:communityId", deleteCommunity);
 
 module.exports = router;
+ 
