@@ -11,3 +11,4 @@ router.get("/", getCommunities);
 router.get("/:communityName", getCommunityDetails);
 
 module.exports = router;
+ 
