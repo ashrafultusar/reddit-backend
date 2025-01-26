@@ -5,7 +5,7 @@ const {
   getPostDetails,
   updatePostViews,
   updatePostVotes,
-  searchPosts,
+  searchPosts, 
 } = require("../controllers/postController");
 
 const router = express.Router();

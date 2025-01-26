@@ -12,6 +12,7 @@ exports.createPost = async (req, res) => {
     addLinkFlair,
     author,
     content,
+    email,
   } = req.body;
 
   try {
@@ -22,6 +23,7 @@ exports.createPost = async (req, res) => {
       addLinkFlair,
       author,
       content,
+      email,
     });
     res.status(201).json(post);
   } catch (err) {

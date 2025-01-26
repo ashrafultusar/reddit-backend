@@ -18,7 +18,7 @@ const Comment = require("../models/Comment");
 // };
 
 exports.createCommunity = async (req, res) => {
-  const { communityName, creator, description } = req.body;
+  const { communityName, creator, description ,email} = req.body;
 
   try {
     // Check if a community with the same name already exists
@@ -32,7 +32,7 @@ exports.createCommunity = async (req, res) => {
     const community = await Community.create({
       communityName,
       creator,
-      description,
+      description,email
     });
 
     res.status(201).json(community);
@@ -61,7 +61,7 @@ exports.getCommunityDetails = async (req, res) => {
     if (!community) {
       return res.status(404).json({ message: "Community not found" });
     }
-
+ 
     // Fetch posts under the community
     const posts = await Post.find({ communityName });
 
