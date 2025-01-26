@@ -45,7 +45,7 @@ exports.createCommunity = async (req, res) => {
 
 exports.getCommunities = async (req, res) => {
   try {
-    const communities = await Community.find({}, "communityName");
+    const communities = await Community.find({}, "communityName email");
     res.status(200).json(communities);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
