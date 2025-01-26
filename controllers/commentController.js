@@ -3,7 +3,7 @@ const Post = require("../models/Post");
 
 // Add a comment or reply
 const addCommentOrReply = async (req, res) => {
-  const { postId, content, commenter, parentComment } = req.body;
+  const { postId, content, commenter, parentComment,email } = req.body;
 
   try {
     // Ensure the post exists
@@ -17,7 +17,7 @@ const addCommentOrReply = async (req, res) => {
       postId,
       content,
       commenter,
-      parentComment: parentComment || null, // Root-level if no parentComment
+      parentComment: parentComment || null,email // Root-level if no parentComment
     });
 
     const savedComment = await newComment.save();
