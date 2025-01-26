@@ -1,5 +1,5 @@
 const express = require("express");
-const { updatePost } = require("../controllers/postController");
+const { updatePost, deletePostWithComments } = require("../controllers/postController");
 const {
   createPost,
   getPosts,
@@ -24,5 +24,8 @@ router.patch("/posts/:id", updatePost);
 
 router.get("/:id", getPostDetails); // Route to get post details by ID
 router.patch("/:id", updatePost); // Route to update a post by ID
+router.delete("/:id", deletePostWithComments);
+
+
 
 module.exports = router;

@@ -228,3 +228,23 @@ exports.updatePost = async (req, res) => {
     res.status(500).json({ message: "Server error.", error: error.message });
   }
 };
+
+
+exports.deletePostWithComments = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Delete the post
+    const post = await Post.findByIdAndDelete(id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // Delete all comments associated with the post
+    await Comment.deleteMany({ postId: id });
+
+    res.json({ message: "Post and its comments deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting post", error });
+  }
+};
