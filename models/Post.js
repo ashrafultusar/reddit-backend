@@ -9,6 +9,7 @@ const postSchema = new mongoose.Schema({
   addLinkFlair: { type: String },
   communityName: { type: String, required: true },
   author: { type: String, required: true },
+  authorEmail: {type:String, required:true},
   createdAt: { type: Date, default: Date.now },
   email: {type: String}
 });
