@@ -81,4 +81,19 @@ const getCommentsByPost = async (req, res) => {
   }
 };
 
-module.exports = { addCommentOrReply, getCommentsByPost };
+const getAllComments = async (req, res) => {
+  try {
+    // Fetch all comments with optional population for related fields
+    const comments = await Comment.find()
+      .populate("postId", "title") // Populate related post (e.g., title)
+      .populate("parentComment", "content") // Populate parent comment (e.g., content)
+      .exec();
+
+    res.status(200).json(comments);
+  } catch (err) {
+    console.error("Error fetching comments:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = { addCommentOrReply, getCommentsByPost, getAllComments };
