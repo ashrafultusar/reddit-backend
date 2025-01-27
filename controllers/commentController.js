@@ -3,7 +3,7 @@ const Post = require("../models/Post");
 
 // Add a comment or reply
 const addCommentOrReply = async (req, res) => {
-  const { postId, content, commenter, parentComment,email } = req.body;
+  const { postId, content, commenter, parentComment, email } = req.body;
 
   try {
     // Ensure the post exists
@@ -17,7 +17,8 @@ const addCommentOrReply = async (req, res) => {
       postId,
       content,
       commenter,
-      parentComment: parentComment || null,email // Root-level if no parentComment
+      parentComment: parentComment || null,
+      email,
     });
 
     const savedComment = await newComment.save();
@@ -29,7 +30,7 @@ const addCommentOrReply = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
- 
+
 // Get comments with nested replies for a specific post
 const getCommentsByPost = async (req, res) => {
   const { postId } = req.params;
@@ -79,6 +80,5 @@ const getCommentsByPost = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-  
 
 module.exports = { addCommentOrReply, getCommentsByPost };
