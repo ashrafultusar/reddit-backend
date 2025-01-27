@@ -12,4 +12,6 @@ router.post("/", addCommentOrReply);
 // Get all comments and nested replies for a specific post
 router.get("/:postId", getCommentsByPost);
 
-module.exports = router;
+
+
+module.exports = router; 
