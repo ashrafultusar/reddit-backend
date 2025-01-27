@@ -45,3 +45,16 @@ exports.users = async(req, res)=>{
         res.status(500).json({message: "server error", err})
     }
 }
+exports.user = async(req, res)=>{
+    const {email}= req.params
+    // return console.log(email)
+    try{
+        const user = await User.findOne({email: email})
+        if(!user){
+            res.status(404).json({message: "users not found"})
+        }
+        res.status(200).json(user)
+    }catch(err){
+        res.status(500).json({message: "server error", err})
+    }
+}

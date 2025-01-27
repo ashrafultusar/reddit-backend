@@ -3,6 +3,7 @@ const Post = require("../models/Post");
 const { post } = require("../routes/authRoutes");
 
 const Comment = require("../models/Comment");
+const User = require("../models/User");
 
 exports.createPost = async (req, res) => {
   const {
@@ -13,7 +14,7 @@ exports.createPost = async (req, res) => {
     author,
     content,
     email,
-    authorEmail
+    authorEmail,
   } = req.body;
 
   try {
@@ -25,7 +26,7 @@ exports.createPost = async (req, res) => {
       author,
       content,
       email,
-      authorEmail
+      authorEmail,
     });
     res.status(201).json(post);
   } catch (err) {
@@ -107,42 +108,110 @@ exports.updatePostViews = async (req, res) => {
 
 // Update the vote count for a post
 exports.updatePostVotes = async (req, res) => {
+  const { postId } = req.params;
+  const { email, voteType } = req.body;
+
   try {
-    const { postId, voteChange } = req.body;
-
-    if (!postId || typeof voteChange !== "number") {
-      return res.status(400).json({
-        message: "Post ID and vote change are required in the request body.",
-      });
-    }
-
     // Find the post
     const post = await Post.findById(postId);
-
     if (!post) {
-      return res.status(404).json({ message: "Post not found." });
+      return res.status(404).json({ error: "Post not found" });
     }
 
-    // Ensure vote does not go below 0
-    const newVoteCount = post.vote + voteChange;
-    if (newVoteCount < 0) {
-      return res
-        .status(400)
-        .json({ message: "Vote count cannot be less than 0." });
+    // Find the voter
+    const voter = await User.findOne({ email });
+    if (!voter) {
+      return res.status(404).json({ error: "Voter not found" });
     }
 
-    // Update the vote count
-    post.vote = newVoteCount;
+    // Find the author of the post
+    const author = await User.findOne({ email: post.authorEmail });
+    if (!author) {
+      return res.status(404).json({ error: "Author not found" });
+    }
+
+    // Check if the voter has already voted on this post
+    const existingVote = post.voters.find((v) => v.userId === email);
+    if (existingVote) {
+      // Prevent duplicate votes of the same type
+      if (existingVote.voteType === voteType) {
+        return res
+          .status(400)
+          .json({ error: "You have already voted this way." });
+      }
+
+      // Reverse the previous vote's impact on the author
+      if (existingVote.voteType === "upvote") {
+        post.vote -= 1;
+        author.reputation -= 5;
+      } else if (existingVote.voteType === "downvote") {
+        post.vote += 1;
+        author.reputation += 10;
+      }
+
+      // Update the voter's vote type
+      existingVote.voteType = voteType;
+    } else {
+      // Add a new vote to the voters array
+      post.voters.push({ userId: email, voteType });
+    }
+
+    // Apply the new vote's impact
+    if (voteType === "upvote") {
+      post.vote += 1;
+      author.reputation += 5;
+    } else if (voteType === "downvote") {
+      post.vote -= 1;
+      author.reputation -= 10;
+    }
+
+    // Save the changes
     await post.save();
+    await author.save();
 
-    return res.status(200).json({ message: "Vote count updated.", post });
+    res.status(200).json({ message: "Vote recorded successfully", post });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ message: "An error occurred.", error: error.message });
+    res.status(500).json({ error: "Internal server error" });
   }
 };
+// exports.updatePostVotes = async (req, res) => {
+//   try {
+//     const { postId, voteChange } = req.body;
+
+//     if (!postId || typeof voteChange !== "number") {
+//       return res.status(400).json({
+//         message: "Post ID and vote change are required in the request body.",
+//       });
+//     }
+
+//     // Find the post
+//     const post = await Post.findById(postId);
+
+//     if (!post) {
+//       return res.status(404).json({ message: "Post not found." });
+//     }
+
+//     // Ensure vote does not go below 0
+//     const newVoteCount = post.vote + voteChange;
+//     if (newVoteCount < 0) {
+//       return res
+//         .status(400)
+//         .json({ message: "Vote count cannot be less than 0." });
+//     }
+
+//     // Update the vote count
+//     post.vote = newVoteCount;
+//     await post.save();
+
+//     return res.status(200).json({ message: "Vote count updated.", post });
+//   } catch (error) {
+//     console.error(error);
+//     return res
+//       .status(500)
+//       .json({ message: "An error occurred.", error: error.message });
+//   }
+// };
 
 exports.searchPosts = async (req, res) => {
   const { query } = req.query;
@@ -185,7 +254,6 @@ exports.searchPosts = async (req, res) => {
   }
 };
 
-
 // Get Post Details by ID
 exports.getPostDetails = async (req, res) => {
   try {
@@ -224,13 +292,14 @@ exports.updatePost = async (req, res) => {
       return res.status(404).json({ message: "Post not found." });
     }
 
-    res.status(200).json({ message: "Post updated successfully!", updatedPost });
+    res
+      .status(200)
+      .json({ message: "Post updated successfully!", updatedPost });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error.", error: error.message });
   }
 };
-
 
 exports.deletePostWithComments = async (req, res) => {
   const { id } = req.params;
