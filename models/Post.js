@@ -10,6 +10,7 @@ const postSchema = new mongoose.Schema({
   communityName: { type: String, required: true },
   author: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
+  email: {type: String}
 });
-
+ 
 module.exports = mongoose.model("Post", postSchema);

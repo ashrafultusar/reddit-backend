@@ -2,30 +2,17 @@ const Community = require("../models/Community");
 const Post = require("../models/Post");
 const Comment = require("../models/Comment");
 
-// exports.createCommunity = async (req, res) => {
-//   const { communityName, creator, description } = req.body;
-
-//   try {
-//     const community = await Community.create({
-//       communityName,
-//       creator,
-//       description,
-//     });
-//     res.status(201).json(community);
-//   } catch (err) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
-
 exports.createCommunity = async (req, res) => {
-  const { communityName, creator, description } = req.body;
+  const { communityName, creator, description, email } = req.body;
 
   try {
     // Check if a community with the same name already exists
     const existingCommunity = await Community.findOne({ communityName });
 
     if (existingCommunity) {
-      return res.status(400).json({ message: "A community with this name already exists" });
+      return res
+        .status(400)
+        .json({ message: "A community with this name already exists" });
     }
 
     // Create the community if the name is unique
@@ -33,6 +20,7 @@ exports.createCommunity = async (req, res) => {
       communityName,
       creator,
       description,
+      email,
     });
 
     res.status(201).json(community);
@@ -41,11 +29,9 @@ exports.createCommunity = async (req, res) => {
   }
 };
 
-
-
 exports.getCommunities = async (req, res) => {
   try {
-    const communities = await Community.find({}, "communityName");
+    const communities = await Community.find({}, "communityName email description");
     res.status(200).json(communities);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
@@ -94,6 +80,59 @@ exports.getCommunityDetails = async (req, res) => {
   }
 };
 
-// module.exports = {
-//   getCommunityDetails,
-// };
+// Get a Specific Community by ID
+exports.getCommunityById = async (req, res) => {
+  const { communityId } = req.params;
+
+  try {
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    res.status(200).json(community);
+  } catch (err) {
+    console.error("Error fetching community by ID:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+exports.updateCommunity = async (req, res) => {
+  const { communityId } = req.params;
+  const { communityName, description } = req.body;
+
+  try {
+    const community = await Community.findByIdAndUpdate(
+      communityId,
+      { communityName, description },
+      { new: true }
+    );
+
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    res.status(200).json(community);
+  } catch (err) {
+    console.error("Error updating community:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.deleteCommunity = async (req, res) => {
+  const { communityId } = req.params;
+
+  try {
+    const community = await Community.findByIdAndDelete(communityId);
+
+    if (!community) {
+      return res.status(404).json({ message: "Community not found" });
+    }
+
+    res.status(200).json({ message: "Community deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting community:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
