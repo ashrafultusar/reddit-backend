@@ -18,7 +18,7 @@ router.get("/", getPosts);
 router.get("/:id", getPostDetails);
 
 router.patch("/views", updatePostViews); // Route to update view count
-router.patch("/votes", updatePostVotes); // Route to update vote count
+router.post("/votes/:postId", updatePostVotes); // Route to update vote count
 
 router.patch("/posts/:id", updatePost);
 
