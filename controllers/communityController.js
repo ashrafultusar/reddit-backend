@@ -79,7 +79,7 @@ exports.getCommunityDetails = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+ 
 // Get a Specific Community by ID
 exports.getCommunityById = async (req, res) => {
   const { communityId } = req.params;

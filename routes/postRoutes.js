@@ -27,5 +27,5 @@ router.patch("/:id", updatePost); // Route to update a post by ID
 router.delete("/:id", deletePostWithComments);
 
 
-
+ 
 module.exports = router;
