@@ -17,13 +17,13 @@ router.post("/", createPost);
 router.get("/", getPosts);
 router.get("/:id", getPostDetails);
 
-router.patch("/views", updatePostViews); // Route to update view count
-router.post("/votes/:postId", updatePostVotes); // Route to update vote count
+router.patch("/views", updatePostViews); 
+router.post("/votes/:postId", updatePostVotes); 
 
 router.patch("/posts/:id", updatePost);
 
-router.get("/:id", getPostDetails); // Route to get post details by ID
-router.patch("/:id", updatePost); // Route to update a post by ID
+router.get("/:id", getPostDetails); 
+router.patch("/:id", updatePost); 
 router.delete("/:id", deletePostWithComments);
 
 

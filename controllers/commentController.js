@@ -96,12 +96,6 @@ const getAllComments = async (req, res) => {
   }
 };
 
-// update here
-
-// get comment by id
-
-// controllers/commentController.js
-
 const getCommentById = async (req, res) => {
   const { id } = req.params; 
 
@@ -110,14 +104,12 @@ const getCommentById = async (req, res) => {
     if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
-    res.status(200).json(comment);  // Send the comment if found
+    res.status(200).json(comment); 
   } catch (error) {
     console.error("Error fetching comment:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
 
 // Update a comment
 const updateComment = async (req, res) => {
@@ -159,6 +151,5 @@ const deleteComment = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
 
 module.exports = { addCommentOrReply, getCommentsByPost, getAllComments,updateComment,deleteComment,getCommentById};
