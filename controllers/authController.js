@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    res.status(200).json(user); // Return user data
+    res.status(200).json(user); 
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
@@ -60,7 +60,7 @@ exports.user = async (req, res) => {
 
     res.status(200).json(user);
   } catch (err) {
-    console.error(err); // Log the error for debugging
+    console.error(err); 
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };

@@ -97,7 +97,6 @@ exports.getCommunityById = async (req, res) => {
   }
 };
 
-
 exports.updateCommunity = async (req, res) => {
   const { communityId } = req.params;
   const { communityName, description } = req.body;

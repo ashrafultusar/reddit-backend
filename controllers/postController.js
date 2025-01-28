@@ -36,14 +36,13 @@ exports.createPost = async (req, res) => {
 
 exports.getPosts = async (req, res) => {
   try {
-    // Find posts and populate the author field
+    
     const posts = await Post.find().populate("author", "name email");
 
-    // Loop through each post to find its associated comments
     const postsWithComments = await Promise.all(
       posts.map(async (post) => {
         const comments = await Comment.find({ postId: post._id });
-        return { ...post.toObject(), comments }; // Merge comments into the post object
+        return { ...post.toObject(), comments }; 
       })
     );
 
@@ -55,19 +54,19 @@ exports.getPosts = async (req, res) => {
 
 exports.getPostDetails = async (req, res) => {
   try {
-    const { id } = req.params; // Get the ObjectId from the request parameters
+    const { id } = req.params; 
     if (!id) {
       return res.status(400).json({ message: "Post ID is required." });
     }
 
-    const postDetails = await Post.findById(id); // Fetch the post using the ObjectId
+    const postDetails = await Post.findById(id); 
     if (!postDetails) {
       return res.status(404).json({ message: "Post not found." });
     }
 
-    return res.status(200).json(postDetails); // Send the post details as the response
+    return res.status(200).json(postDetails); 
   } catch (error) {
-    console.error(error); // Log the error for debugging
+    console.error(error); 
     return res
       .status(500)
       .json({ message: "An error occurred.", error: error.message });
@@ -79,8 +78,6 @@ exports.updatePostViews = async (req, res) => {
   try {
     const { postId } = req.body;
 
-    // return console.log(postId);
-
     if (!postId) {
       return res
         .status(400)
@@ -90,7 +87,7 @@ exports.updatePostViews = async (req, res) => {
     const post = await Post.findByIdAndUpdate(
       postId,
       { $inc: { views: 1 } },
-      { new: true } // Return the updated document
+      { new: true } 
     );
 
     if (!post) {
@@ -112,35 +109,33 @@ exports.updatePostVotes = async (req, res) => {
   const { email, voteType } = req.body;
 
   try {
-    // Find the post
+   
     const post = await Post.findById(postId);
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    // Find the voter
+    
     const voter = await User.findOne({ email });
     if (!voter) {
       return res.status(404).json({ error: "Voter not found" });
     }
 
-    // Find the author of the post
     const author = await User.findOne({ email: post.authorEmail });
     if (!author) {
       return res.status(404).json({ error: "Author not found" });
     }
 
-    // Check if the voter has already voted on this post
     const existingVote = post.voters.find((v) => v.userId === email);
     if (existingVote) {
-      // Prevent duplicate votes of the same type
+      
       if (existingVote.voteType === voteType) {
         return res
           .status(400)
           .json({ error: "You have already voted this way." });
       }
 
-      // Reverse the previous vote's impact on the author
+   
       if (existingVote.voteType === "upvote") {
         post.vote -= 1;
         author.reputation -= 5;
@@ -149,14 +144,14 @@ exports.updatePostVotes = async (req, res) => {
         author.reputation += 10;
       }
 
-      // Update the voter's vote type
+    
       existingVote.voteType = voteType;
     } else {
-      // Add a new vote to the voters array
+     
       post.voters.push({ userId: email, voteType });
     }
 
-    // Apply the new vote's impact
+  
     if (voteType === "upvote") {
       post.vote += 1;
       author.reputation += 5;
@@ -165,7 +160,7 @@ exports.updatePostVotes = async (req, res) => {
       author.reputation -= 10;
     }
 
-    // Save the changes
+   
     await post.save();
     await author.save();
 
@@ -175,43 +170,7 @@ exports.updatePostVotes = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-// exports.updatePostVotes = async (req, res) => {
-//   try {
-//     const { postId, voteChange } = req.body;
 
-//     if (!postId || typeof voteChange !== "number") {
-//       return res.status(400).json({
-//         message: "Post ID and vote change are required in the request body.",
-//       });
-//     }
-
-//     // Find the post
-//     const post = await Post.findById(postId);
-
-//     if (!post) {
-//       return res.status(404).json({ message: "Post not found." });
-//     }
-
-//     // Ensure vote does not go below 0
-//     const newVoteCount = post.vote + voteChange;
-//     if (newVoteCount < 0) {
-//       return res
-//         .status(400)
-//         .json({ message: "Vote count cannot be less than 0." });
-//     }
-
-//     // Update the vote count
-//     post.vote = newVoteCount;
-//     await post.save();
-
-//     return res.status(200).json({ message: "Vote count updated.", post });
-//   } catch (error) {
-//     console.error(error);
-//     return res
-//       .status(500)
-//       .json({ message: "An error occurred.", error: error.message });
-//   }
-// };
 
 exports.searchPosts = async (req, res) => {
   const { query } = req.query;
@@ -221,28 +180,27 @@ exports.searchPosts = async (req, res) => {
   }
 
   try {
-    // Search posts by title
+   
     const postsByTitle = await Post.find({
       title: { $regex: query, $options: "i" },
     });
 
-    // Search posts by comments' content
+   
     const comments = await Comment.find({
       content: { $regex: query, $options: "i" },
     });
     const postIdsFromComments = comments.map((comment) => comment.postId);
 
-    // Combine and remove duplicate post IDs
+   
     const uniquePostIds = [
       ...new Set([
         ...postsByTitle.map((post) => post._id),
         ...postIdsFromComments.filter((id) =>
           mongoose.Types.ObjectId.isValid(id)
-        ), // Filter valid ObjectIds
+        ), 
       ]),
     ];
 
-    // Fetch full post details
     const posts = await Post.find({ _id: { $in: uniquePostIds } });
 
     res.json(posts);
@@ -277,8 +235,8 @@ exports.getPostDetails = async (req, res) => {
 // Update Post
 exports.updatePost = async (req, res) => {
   try {
-    const { id } = req.params; // Get post ID from params
-    const updatedData = req.body; // Get updated data from request body
+    const { id } = req.params; 
+    const updatedData = req.body; 
 
     if (!id) {
       return res.status(400).json({ message: "Post ID is required." });
