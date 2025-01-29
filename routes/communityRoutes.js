@@ -7,7 +7,7 @@ const {
   updateCommunity,
   deleteCommunity,
 } = require("../controllers/communityController");
-
+ 
 const router = express.Router();
 
 router.post("/", createCommunity);
