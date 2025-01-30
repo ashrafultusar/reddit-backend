@@ -1,5 +1,5 @@
 const express = require("express");
-const { updatePost, deletePostWithComments } = require("../controllers/postController");
+const { updatePost, deletePostWithComments, adminPostUpdate, adminPostDelete } = require("../controllers/postController");
 const {
   createPost,
   getPosts,
@@ -25,6 +25,13 @@ router.patch("/posts/:id", updatePost);
 router.get("/:id", getPostDetails); 
 router.patch("/:id", updatePost); 
 router.delete("/:id", deletePostWithComments);
+
+// admin side code
+// Update a post
+router.put('/posts/:postId',adminPostUpdate)
+
+// Delete a post
+router.delete('/posts/:postId',adminPostDelete)
 
 
 
