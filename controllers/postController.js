@@ -232,7 +232,7 @@ exports.getPostDetails = async (req, res) => {
   }
 };
 
-// Update Post
+
 exports.updatePost = async (req, res) => {
   try {
     const { id } = req.params; 
@@ -277,3 +277,6 @@ exports.deletePostWithComments = async (req, res) => {
     res.status(500).json({ message: "Error deleting post", error });
   }
 };
+
+// admin side code
+
