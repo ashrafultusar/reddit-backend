@@ -13,7 +13,12 @@ const router = express.Router();
 
 router.get("/search", searchPosts);
 
+
+
+
 router.post("/", createPost);
+
+
 router.get("/", getPosts);
 router.get("/:id", getPostDetails);
 
@@ -28,7 +33,8 @@ router.delete("/:id", deletePostWithComments);
 
 // admin side code
 // Update a post
-router.put('/posts/:postId',adminPostUpdate)
+router.put('/:postId', adminPostUpdate)
+
 
 // Delete a post
 router.delete('/posts/:postId',adminPostDelete)

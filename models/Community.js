@@ -6,6 +6,6 @@ const communitySchema = new mongoose.Schema({
   description: { type: String },
   createdAt: { type: Date, default: Date.now },
   email: {type: String}
-});
+}); 
  
 module.exports = mongoose.model("Community", communitySchema);

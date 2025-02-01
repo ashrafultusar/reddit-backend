@@ -283,7 +283,7 @@ exports.deletePostWithComments = async (req, res) => {
  exports.adminPostUpdate= async (req, res) => {
    const { postId } = req.params;
   const updateData = req.body;
-
+  
   try {
     const updatedPost = await Post.findByIdAndUpdate(postId, updateData, { new: true });
     if (!updatedPost) {
