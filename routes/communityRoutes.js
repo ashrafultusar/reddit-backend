@@ -6,9 +6,6 @@ const {
   getCommunityById,
   updateCommunity,
   deleteCommunity,
-  getAdminCommunityById,
-  updateAdminCommunity,
-  deleteAdminCommunity,
 } = require("../controllers/communityController");
  
 const router = express.Router();

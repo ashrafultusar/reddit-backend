@@ -33,10 +33,10 @@ router.delete("/:id", deleteComment);
 // Get comment by ID
 router.get("/single/:id", getCommentById);
 
-// admin code--------
+
 // Get a single comment by ID
 router.get("/single/:commentId", getAdminCommentById);
-
+ 
 // Update comment by ID
 router.put("/:commentId", updateAdminComment);
 

@@ -31,7 +31,7 @@ router.get("/:id", getPostDetails);
 router.patch("/:id", updatePost); 
 router.delete("/:id", deletePostWithComments);
 
-// admin side code
+
 // Update a post
 router.put('/:postId', adminPostUpdate)
 

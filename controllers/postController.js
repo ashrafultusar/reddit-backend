@@ -278,7 +278,7 @@ exports.deletePostWithComments = async (req, res) => {
   }
 };
 
-// admin side code
+
 // Update a post
  exports.adminPostUpdate= async (req, res) => {
    const { postId } = req.params;

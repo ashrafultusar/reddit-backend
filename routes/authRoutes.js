@@ -7,8 +7,8 @@ router.post('/login', login);
 router.get("/users", users)
 router.get("/user/:email", user)
 
-// admin side code
-// Endpoint to get user by email
+
+
 router.get('/user/:email', getUserByEmail);
 
 
