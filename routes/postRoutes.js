@@ -1,5 +1,5 @@
 const express = require("express");
-const { updatePost, deletePostWithComments } = require("../controllers/postController");
+const { updatePost, deletePostWithComments, adminPostUpdate, adminPostDelete } = require("../controllers/postController");
 const {
   createPost,
   getPosts,
@@ -13,7 +13,12 @@ const router = express.Router();
 
 router.get("/search", searchPosts);
 
+
+
+
 router.post("/", createPost);
+
+
 router.get("/", getPosts);
 router.get("/:id", getPostDetails);
 
@@ -25,6 +30,15 @@ router.patch("/posts/:id", updatePost);
 router.get("/:id", getPostDetails); 
 router.patch("/:id", updatePost); 
 router.delete("/:id", deletePostWithComments);
+
+
+// Update a post
+router.put('/:postId', adminPostUpdate)
+
+
+// Delete a post
+router.delete('/posts/:postId',adminPostDelete)
+
 
 
  
