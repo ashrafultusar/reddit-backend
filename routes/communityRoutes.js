@@ -7,7 +7,7 @@ const {
   updateCommunity,
   deleteCommunity,
 } = require("../controllers/communityController");
-
+ 
 const router = express.Router();
 
 router.post("/", createCommunity);
@@ -16,6 +16,10 @@ router.get("/:communityName", getCommunityDetails);
 router.get("/id/:communityId", getCommunityById);
 router.put("/id/:communityId", updateCommunity);
 router.delete("/id/:communityId", deleteCommunity);
+
+
+
+
 
 module.exports = router;
  

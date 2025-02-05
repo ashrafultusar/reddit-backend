@@ -18,6 +18,10 @@ app.use("/api/comments", require("./routes/commentRoutes"));
 
 app.use("/api/posts", require("./routes/postRoutes"));
 
+
+
+
+
 app.get("/", async (req, res) => {
   res.send("hello world");
 });

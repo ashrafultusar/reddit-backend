@@ -97,14 +97,14 @@ const getAllComments = async (req, res) => {
 };
 
 const getCommentById = async (req, res) => {
-  const { id } = req.params; 
+  const { id } = req.params;
 
   try {
-    const comment = await Comment.findById(id) 
+    const comment = await Comment.findById(id);
     if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
-    res.status(200).json(comment); 
+    res.status(200).json(comment);
   } catch (error) {
     console.error("Error fetching comment:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -127,7 +127,12 @@ const updateComment = async (req, res) => {
       return res.status(404).json({ message: "Comment not found" });
     }
 
-    res.status(200).json({ message: "Comment updated successfully", comment: updatedComment });
+    res
+      .status(200)
+      .json({
+        message: "Comment updated successfully",
+        comment: updatedComment,
+      });
   } catch (error) {
     console.error("Error updating comment:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -152,4 +157,50 @@ const deleteComment = async (req, res) => {
   }
 };
 
-module.exports = { addCommentOrReply, getCommentsByPost, getAllComments,updateComment,deleteComment,getCommentById};
+// admin side code
+const getAdminCommentById = async (req, res) => {
+  try {
+    const comment = await Comment.findById(req.params.commentId);
+    if (!comment) return res.status(404).json({ message: "Comment not found" });
+    res.json(comment);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const updateAdminComment= async (req, res) => {
+  try {
+    const updatedComment = await Comment.findByIdAndUpdate(
+      req.params.commentId,
+      { content: req.body.content },
+      { new: true }
+    );
+    if (!updatedComment) return res.status(404).json({ message: "Comment not found" });
+    res.json(updatedComment);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update comment" });
+  }
+}
+
+const deleteAdminComments=async (req, res) => {
+  try {
+    const deletedComment = await Comment.findByIdAndDelete(req.params.commentId);
+    if (!deletedComment) return res.status(404).json({ message: "Comment not found" });
+    res.json({ message: "Comment deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete comment" });
+  }
+}
+
+
+ 
+
+
+module.exports = {
+  addCommentOrReply,
+  getCommentsByPost,
+  getAllComments,
+  updateComment,
+  deleteComment,
+  getCommentById,getAdminCommentById,updateAdminComment,deleteAdminComments
+};

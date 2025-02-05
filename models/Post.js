@@ -14,5 +14,5 @@ const postSchema = new mongoose.Schema({
   email: { type: String },
   voters: [{ userId: { type: String }, voteType: { type: String } }],
 });
-
+ 
 module.exports = mongoose.model("Post", postSchema);
